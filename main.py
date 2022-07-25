@@ -85,7 +85,7 @@ def getParties():
     return jsonify(response.json())
 
 
-@app.route("/party/<string:id>", methods=["GET"])
+@app.route("/party/<string:id_party>", methods=["GET"])
 def get_party(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party/" + id
@@ -123,7 +123,7 @@ def delete_party(id):
     ENDPOINTS CANDIDATE
 --------------------------
 """
-@app.route("/candidate", methods=["GET"])
+@app.route("/candidates", methods=["GET"])
 def getCandidates():
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/candidate"
@@ -170,6 +170,46 @@ def delete_candidate(id):
     ENDPOINTS TABLE
 --------------------------
 """
+app.route("/table", methods=["GET"])
+def getTables():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
+
+
+@app.route("/table/<string:id>", methods=["GET"])
+def get_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/table", methods=["POST"])
+def create_table():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table"
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/table/<string:id>", methods=["PUT"])
+def update_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/table/<string:id>", methods=["DELETE"])
+def delete_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    response = requests.delete(url, headers=headers)
+    return response.json()
 
 
 """
