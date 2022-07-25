@@ -85,7 +85,7 @@ def getParties():
     return jsonify(response.json())
 
 
-@app.route("/party/<string:id_party>", methods=["GET"])
+@app.route("/party/<string:id>", methods=["GET"])
 def get_party(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party/" + id
