@@ -27,9 +27,18 @@ dataConfig = loadFileConfig()
 
 
 # ------------------------- Middleware -------------------------------
+
+def format_url():
+    parts = request.path.split("/")
+    url = request.path
+    for part in parts:
+        if re.search('\\d', part):
+            url = url.replace(part, "?")
+    return url
+
 @app.before_request
 def before_request_callback():
-    excluded_routes = ["/login"]
+    excluded_routes = ["/login","/signup"]
     if request.path not in excluded_routes:
         # Token
         if not verify_jwt_in_request():
@@ -37,7 +46,30 @@ def before_request_callback():
         # Roles and Permissions
         user = get_jwt_identity()
         print(user)
+        if user["rol"] is None:
+            return jsonify({"msg": "Permission Denied"}), 401
+        else:
+            role_id = user["rol"]["id"]
+            route = format_url()
+            method = request.method
+            has_permission = validate_permission(role_id, route, method)
+            if not has_permission:
+                return jsonify({"msg": "Permission Denied"}), 401
 
+
+def validate_permission(role_id, route, method):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/permission-role/validate/role/" + role_id
+    body = {"url": route, "method": method}
+    print(body)
+    response = requests.post(url, json=body, headers=headers)
+    print(response)
+    try:
+        data = response.json()
+        if "id" in data:
+            return True
+    except:
+        return False
 
 
 # ------------------------- Setting JWT Token -------------------------------
@@ -46,9 +78,9 @@ jwt = JWTManager(app)
 
 
 # ------------------------- Endpoints -------------------------------
-@app.route("/test", methods=["GET"])
+@app.route("/home", methods=["GET"])
 def test():
-    return jsonify({"msg": "It works!"})
+    return jsonify({"msg": "This is a home page"})
 
 
     
@@ -73,12 +105,59 @@ def login():
 
 """
 ---------------------------
+    ENDPOINTS USER
+--------------------------
+"""
+@app.route("/users", methods=["GET"])
+def get_users():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/users"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
+
+
+@app.route("/user/<string:id>", methods=["GET"])
+def get_user(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/user/" + id
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/signup", methods=["POST"])
+def create_user():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/user"
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/user/<string:id>", methods=["PUT"])
+def update_user(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/user/" + id
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/user/<string:id>", methods=["DELETE"])
+def delete_user(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-security"] + "/user/" + id
+    response = requests.delete(url, headers=headers)
+    return response.json()
+
+
+"""
+---------------------------
     ENDPOINTS PARTY
 --------------------------
 """
 
 @app.route("/parties", methods=["GET"])
-def getStudents():
+def get_parties():
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/parties"
     response = requests.get(url, headers=headers)
@@ -86,7 +165,7 @@ def getStudents():
 
 
 @app.route("/party/<string:id>", methods=["GET"])
-def get_student(id):
+def get_party(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party/" + id
     response = requests.get(url, headers=headers)
@@ -94,7 +173,7 @@ def get_student(id):
 
 
 @app.route("/party", methods=["POST"])
-def create_student():
+def create_party():
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party"
     body = request.get_json()
@@ -103,7 +182,7 @@ def create_student():
 
 
 @app.route("/party/<string:id>", methods=["PUT"])
-def update_student(id):
+def update_party(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party/" + id
     body = request.get_json()
@@ -112,7 +191,7 @@ def update_student(id):
 
 
 @app.route("/party/<string:id>", methods=["DELETE"])
-def delete_student(id):
+def delete_party(id):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/party/" + id
     response = requests.delete(url, headers=headers)
