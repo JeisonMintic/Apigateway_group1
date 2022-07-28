@@ -202,30 +202,201 @@ def delete_party(id):
     ENDPOINTS CANDIDATE
 --------------------------
 """
+@app.route("/candidates", methods=["GET"])
+def get_candidates():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/candidates"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
 
+
+@app.route("/candidate/<string:id>", methods=["GET"])
+def get_candidate(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/candidate/" + id
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/candidate", methods=["POST"])
+def create_candidate():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/candidate"
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/candidate/<string:id>", methods=["PUT"])
+def update_candidate(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/candidate/" + id
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/candidate/<string:id>", methods=["DELETE"])
+def delete_candidate(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/candidate/" + id
+    response = requests.delete(url, headers=headers)
+    return response.json()
 
 """
 ---------------------------
     ENDPOINTS TABLE
 --------------------------
 """
+@app.route("/tables", methods=["GET"])
+def get_tables():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/tables"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
 
+
+@app.route("/table/<string:id>", methods=["GET"])
+def get_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/table", methods=["POST"])
+def create_table():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table"
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/table/<string:id>", methods=["PUT"])
+def update_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/table/<string:id>", methods=["DELETE"])
+def delete_table(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/table/" + id
+    response = requests.delete(url, headers=headers)
+    return response.json()
 
 """
 ---------------------------
     ENDPOINTS RESULT
 --------------------------
 """
+@app.route("/results", methods=["GET"])
+def get_results():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/results"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
 
+
+@app.route("/result/<string:id>", methods=["GET"])
+def get_result(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/" + id
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/result/table/<string:id_table>/candidate/<string:id_candidate>", methods=["POST"])
+def create_result(id_table, id_candidate):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/table/" + id_table + "/candidate/" + id_candidate
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/result/<string:id>/table/<string:id_table>/candidate/<string:id_candidate>", methods=["PUT"])
+def update_result(id, id_table, id_candidate):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/" + id + "/table/" + id_table + "/candidate/" + id_candidate
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/result/<string:id>", methods=["DELETE"])
+def delete_result(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/" + id
+    response = requests.delete(url, headers=headers)
+    return response.json()
+
+@app.route("/result/party/<string:id_party>", methods=["GET"])
+def get_result_by_party(id_party):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/party/" + id_party
+    response = requests.delete(url, headers=headers)
+    return response.json()
 
 """
 ---------------------------
     ENDPOINTS REPORTS
 --------------------------
 """
+@app.route("/result/votesxcandidates", methods=["GET"])
+def get_result_votesxcandidates():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxcandidates"
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
+
+
+@app.route("/result/votesxcandidates/table/<string:id_table>", methods=["GET"])
+def get_result_votesxcandidates_table(id_table):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxcandidates/table/" + id_table
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+
+@app.route("/result/votesxtables", methods=["GET"])
+def get_result_total_votesxtables():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxtables/" 
+    body = request.get_json()
+    response = requests.post(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/result/votesxtable/<string:id_table>", methods=["GET"])
+def get_result_total_votesxtable(id_table):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxtable/" + id_table 
+    body = request.get_json()
+    response = requests.put(url, json=body, headers=headers)
+    return response.json()
+
+
+@app.route("/result/votesxparties", methods=["GET"])
+def get_result_total_votesxparties(id):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxparties"
+    response = requests.delete(url, headers=headers)
+    return response.json()
+
+@app.route("/result/votesxparty/table/<string:id_table>", methods=["GET"])
+def get_result_total_votesxparty(id_table):
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/votesxparty/table/" + id_table
+    response = requests.delete(url, headers=headers)
+    return response.json()
+
 
 # ------------------------- Server -------------------------------
-
 url = "http://" + dataConfig["url-apigateway"] + ":" + dataConfig["port-apigateway"];
 print("Server running: " + url)
 serve(app, host=dataConfig["url-apigateway"], port=dataConfig["port-apigateway"])
