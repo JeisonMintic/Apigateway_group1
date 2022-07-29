@@ -39,22 +39,24 @@ def format_url():
 @app.before_request
 def before_request_callback():
     excluded_routes = ["/login","/signup"]
+    excluded_methods = ["OPTIONS"]
     if request.path not in excluded_routes:
         # Token
-        if not verify_jwt_in_request():
-            return jsonify({"msg": "Permission Denied"}), 401
-        # Roles and Permissions
-        user = get_jwt_identity()
-        print(user)
-        if user["rol"] is None:
-            return jsonify({"msg": "Permission Denied"}), 401
-        else:
-            role_id = user["rol"]["id"]
-            route = format_url()
-            method = request.method
-            has_permission = validate_permission(role_id, route, method)
-            if not has_permission:
+        if request.path not in excluded_routes and request.method not in excluded_methods:
+            if not verify_jwt_in_request():
                 return jsonify({"msg": "Permission Denied"}), 401
+            # Roles and Permissions
+            user = get_jwt_identity()
+            print(user)
+            if user["rol"] is None:
+                return jsonify({"msg": "Permission Denied"}), 401
+            else:
+                role_id = user["rol"]["id"]
+                route = format_url()
+                method = request.method
+                has_permission = validate_permission(role_id, route, method)
+                if not has_permission:
+                    return jsonify({"msg": "Permission Denied"}), 401
 
 
 def validate_permission(role_id, route, method):
