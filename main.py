@@ -227,10 +227,10 @@ def get_candidate(id):
     return jsonify(response.json())
 
 
-@app.route("/candidate", methods=["POST"])
-def create_candidate():
+@app.route("/candidate/party/<string:id_party>", methods=["POST"])
+def create_candidate(id_party):
     headers = {"Content-Type": "application/json; charset=utf-8"}
-    url = dataConfig["url-entities"] + "/candidate"
+    url = dataConfig["url-entities"] + "/candidate" + id_party
     body = request.get_json()
     response = requests.post(url, json=body, headers=headers)
     return jsonify(response.json())
