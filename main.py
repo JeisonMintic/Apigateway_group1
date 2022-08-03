@@ -230,7 +230,7 @@ def get_candidate(id):
 @app.route("/candidate/party/<string:id_party>", methods=["POST"])
 def create_candidate(id_party):
     headers = {"Content-Type": "application/json; charset=utf-8"}
-    url = dataConfig["url-entities"] + "/candidate" + id_party
+    url = dataConfig["url-entities"] + "/candidate/party/" + id_party
     body = request.get_json()
     response = requests.post(url, json=body, headers=headers)
     return jsonify(response.json())
@@ -401,6 +401,13 @@ def get_result_total_votesxparties(id):
 def get_result_total_votesxparty(id_table):
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/result/votesxparty/table/" + id_table
+    response = requests.get(url, headers=headers)
+    return jsonify(response.json())
+
+@app.route("/result/percentage", methods=["GET"])
+def get_result_total_votesxparties():
+    headers = {"Content-Type": "application/json; charset=utf-8"}
+    url = dataConfig["url-entities"] + "/result/percentage"
     response = requests.get(url, headers=headers)
     return jsonify(response.json())
 
