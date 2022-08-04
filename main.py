@@ -38,7 +38,7 @@ def format_url():
 
 @app.before_request
 def before_request_callback():
-    excluded_routes = ["/login","/signin","/user/email/<string:email>"]
+    excluded_routes = ["/login","/signin","/party"]
     excluded_methods = ["OPTIONS"]
     if request.path not in excluded_routes and request.method not in excluded_methods:
         # Token
@@ -405,7 +405,7 @@ def get_result_total_votesxparty(id_table):
     return jsonify(response.json())
 
 @app.route("/result/percentage", methods=["GET"])
-def get_result_total_votesxparties():
+def get_result_percentage():
     headers = {"Content-Type": "application/json; charset=utf-8"}
     url = dataConfig["url-entities"] + "/result/percentage"
     response = requests.get(url, headers=headers)
