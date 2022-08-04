@@ -38,7 +38,7 @@ def format_url():
 
 @app.before_request
 def before_request_callback():
-    excluded_routes = ["/login","/signin","/party"]
+    excluded_routes = ["/login","/signin"]
     excluded_methods = ["OPTIONS"]
     if request.path not in excluded_routes and request.method not in excluded_methods:
         # Token
